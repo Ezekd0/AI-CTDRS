@@ -1,19 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { api, login, logout } from "./api";
+import { SignupPage, AdminOverview, AdminUsers, errorMessage } from "./AccountPages";
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, BarChart, Bar, Cell } from "recharts";
 
 const severityStyles={critical:"border-red-500/30 bg-red-500/10 text-red-300",high:"border-orange-500/30 bg-orange-500/10 text-orange-300",medium:"border-amber-500/30 bg-amber-500/10 text-amber-300",low:"border-cyan-500/30 bg-cyan-500/10 text-cyan-300",informational:"border-slate-600 bg-slate-700/40 text-slate-300"};
 const nav=["Dashboard","Live Monitor","Detections","Alerts","Datasets","AI Models","Explainable AI","Analytics","Reports","Settings"];
 const fmt=(v)=>v?new Date(v).toLocaleString():"—";
-function LoginPage({onLogin}){
+function LoginPage({onLogin,navigate}){
  const [email,setEmail]=useState("");
  const [password,setPassword]=useState("");
  const [error,setError]=useState("");
  const [busy,setBusy]=useState(false);
  const submit=async(e)=>{
   e.preventDefault(); setError(""); setBusy(true);
-  try { await login(email.trim(),password); onLogin(); }
-  catch(err){ setError(err.response?.data?.detail||"Unable to sign in."); }
+  try { await login(email.trim(),password); await onLogin(); }
+  catch(err){ setError(errorMessage(err,"Unable to sign in.")); }
   finally { setBusy(false); }
  };
  return <div className="flex min-h-screen items-center justify-center bg-slate-950 px-5 text-slate-100">
@@ -27,6 +28,7 @@ function LoginPage({onLogin}){
     {error&&<div role="alert" className="rounded-lg border border-red-900 bg-red-950/30 p-3 text-sm text-red-300">{error}</div>}
     <button disabled={busy} className="w-full rounded-lg bg-cyan-600 px-4 py-2.5 font-semibold hover:bg-cyan-500 disabled:opacity-50">{busy?"Signing in…":"Sign in"}</button>
    </form>
+   <a href="/signup" onClick={e=>{e.preventDefault();navigate("/signup")}} className="mt-5 block text-sm text-cyan-300">Create an account</a>
   </div>
  </div>
 }
@@ -110,11 +112,38 @@ function AnalyticsPage(){
 }
 function SettingsPage(){return <div className="space-y-5"><header><div className="text-xs uppercase tracking-[.2em] text-cyan-400">AI-CTDRS / Configuration</div><h1 className="mt-1 text-2xl font-bold">Settings</h1><p className="mt-1 text-sm text-slate-500">Operational configuration is environment-managed; secrets are never displayed in the browser.</p></header><div className="grid gap-4 md:grid-cols-2"><Metric label="API mode" value="Authenticated production API"/><Metric label="Response mode" value="SIMULATION"/><Metric label="JWT algorithm" value="HS256"/><Metric label="External controls" value="Disabled"/></div><div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5 text-sm text-amber-300">Configuration changes require deployment environment updates. This page intentionally does not expose secrets or provide client-side privilege-changing controls.</div></div>}
 
+const pagePaths = {Dashboard:'/dashboard', 'Live Monitor':'/monitor', Detections:'/detections', Alerts:'/alerts', Datasets:'/datasets', 'AI Models':'/models', 'Explainable AI':'/explainability', Analytics:'/analytics', Reports:'/reports', Settings:'/settings', Admin:'/admin', Users:'/admin/users'};
 function App(){
- const [authenticated,setAuthenticated]=useState(Boolean(localStorage.getItem("access_token")));
- const [page,setPage]=useState("Dashboard");
+ const [path,setPath]=useState(window.location.pathname);
+ const [user,setUser]=useState(null);
+ const [checking,setChecking]=useState(Boolean(localStorage.getItem('access_token')));
+ const [sessionError,setSessionError]=useState('');
  const [detail,setDetail]=useState(null);
- useEffect(()=>{const handler=()=>setAuthenticated(false);window.addEventListener("auth:logout",handler);return()=>window.removeEventListener("auth:logout",handler)},[]);
- if(!authenticated) return <LoginPage onLogin={()=>setAuthenticated(true)}/>;
- const content=detail?<Details id={detail} back={()=>setDetail(null)}/>:page==="Dashboard"?<DashboardPage openDetection={setDetail}/>:page==="Live Monitor"?<LiveMonitor openDetection={setDetail}/>:page==="Detections"?<DetectionsPage openDetection={setDetail}/>:page==="Alerts"?<AlertsPage openDetection={setDetail}/>:page==="Datasets"?<DatasetsPage/>:page==="AI Models"?<ModelsPage/>:page==="Explainable AI"?<ExplainableAIPage/>:page==="Analytics"?<AnalyticsPage/>:page==="Reports"?<ReportsPage openDetection={setDetail}/>:<SettingsPage/>;return <div className="min-h-screen bg-slate-950 text-slate-100"><aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-800 bg-slate-950 p-5 lg:block"><div className="mb-8"><div className="text-xs font-bold tracking-[.22em] text-cyan-400">AI-CTDRS</div><div className="mt-1 text-sm text-slate-400">Security Operations</div></div><nav className="space-y-1">{nav.map(n=><button key={n} onClick={()=>{setDetail(null);setPage(n)}} aria-current={page===n&&!detail?"page":undefined} className={`w-full rounded-lg px-3 py-2.5 text-left text-sm ${page===n&&!detail?"bg-cyan-500/10 text-cyan-300":"text-slate-400 hover:bg-slate-900 hover:text-white"}`}>{n}</button>)}</nav></aside><main className="lg:ml-64"><header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/95 px-5 py-4 backdrop-blur"><div className="flex items-center justify-between"><div><div className="text-xs text-slate-500">AI-Driven Cyber Threat Detection and Response System</div><div className="font-semibold">{detail?"Detection Details":page}</div></div><div className="flex items-center gap-3"><select aria-label="Navigation" value={page} onChange={e=>{setDetail(null);setPage(e.target.value)}} className="max-w-[150px] rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-xs lg:hidden">{nav.map(n=><option key={n}>{n}</option>)}</select><div className="hidden text-xs text-emerald-300 sm:block">Production API</div><button onClick={async()=>{try{await api.post("/auth/logout")}catch{}finally{logout()}}} className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-800">Sign out</button></div></div></header><div className="p-5 lg:p-8">{content}</div></main></div>}
+ const navigate=(next,replace=false)=>{window.history[replace?'replaceState':'pushState']({},'',next);setPath(next);setDetail(null)};
+ const loadUser=async()=>{const r=await api.get('/auth/me');setUser(r.data);setSessionError('');return r.data};
+ const onLogin=async()=>{await loadUser();navigate('/dashboard',true)};
+ useEffect(()=>{
+   let active=true;
+   const pop=()=>{setPath(window.location.pathname);setDetail(null)};
+   const expired=()=>{active=false;setUser(null);setSessionError('');setChecking(false);navigate('/login',true)};
+   window.addEventListener('popstate',pop);window.addEventListener('auth:logout',expired);
+   if(localStorage.getItem('access_token')) api.get('/auth/me').then(r=>{if(active)setUser(r.data)}).catch(e=>{if(active && e.response?.status!==401)setSessionError(errorMessage(e,'Unable to verify your session. Please reload to try again.'))}).finally(()=>{if(active)setChecking(false)});
+   return()=>{active=false;window.removeEventListener('popstate',pop);window.removeEventListener('auth:logout',expired)};
+ },[]);
+ const isAdmin=user?.role==='administrator';
+ const isPublic=['/login','/signup','/register'].includes(path);
+ const adminPath=path==='/admin'||path.startsWith('/admin/');
+ useEffect(()=>{
+   if(checking||sessionError)return;
+   if(!user&&!isPublic)navigate('/login',true);
+   else if(user&&(isPublic||path==='/'||(adminPath&&!isAdmin)))navigate('/dashboard',true);
+ },[user,path,checking,sessionError]);
+ if(checking)return <div role="status" className="min-h-screen bg-slate-950 p-8 text-slate-100">Verifying session…</div>;
+ if(sessionError)return <div role="alert" className="min-h-screen bg-slate-950 p-8 text-red-300">{sessionError} <button onClick={logout}>Return to Login</button></div>;
+ if(!user)return ['/signup','/register'].includes(path)?<SignupPage navigate={navigate}/>:<LoginPage onLogin={onLogin} navigate={navigate}/>;
+ if(adminPath&&!isAdmin)return null;
+ const page=Object.keys(pagePaths).find(key=>pagePaths[key]===path)||'Dashboard';
+ const visibleNav=isAdmin?[...nav,'Admin','Users']:nav;
+ const selectPage=(name)=>navigate(pagePaths[name]);
+ const content=detail?<Details id={detail} back={()=>setDetail(null)}/>:page==="Admin"?<AdminOverview navigate={navigate} openDetection={setDetail}/>:page==="Users"?<AdminUsers currentUser={user}/>:page==="Dashboard"?<DashboardPage openDetection={setDetail}/>:page==="Live Monitor"?<LiveMonitor openDetection={setDetail}/>:page==="Detections"?<DetectionsPage openDetection={setDetail}/>:page==="Alerts"?<AlertsPage openDetection={setDetail}/>:page==="Datasets"?<DatasetsPage/>:page==="AI Models"?<ModelsPage/>:page==="Explainable AI"?<ExplainableAIPage/>:page==="Analytics"?<AnalyticsPage/>:page==="Reports"?<ReportsPage openDetection={setDetail}/>:<SettingsPage/>;return <div className="min-h-screen bg-slate-950 text-slate-100"><aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-800 bg-slate-950 p-5 lg:block"><div className="mb-8"><div className="text-xs font-bold tracking-[.22em] text-cyan-400">AI-CTDRS</div><div className="mt-1 text-sm text-slate-400">Security Operations</div></div><nav className="space-y-1">{visibleNav.map(n=><button key={n} onClick={()=>{setDetail(null);selectPage(n)}} aria-current={page===n&&!detail?"page":undefined} className={`w-full rounded-lg px-3 py-2.5 text-left text-sm ${page===n&&!detail?"bg-cyan-500/10 text-cyan-300":"text-slate-400 hover:bg-slate-900 hover:text-white"}`}>{n}</button>)}</nav></aside><main className="lg:ml-64"><header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/95 px-5 py-4 backdrop-blur"><div className="flex items-center justify-between"><div><div className="text-xs text-slate-500">AI-Driven Cyber Threat Detection and Response System</div><div className="font-semibold">{detail?"Detection Details":page}</div></div><div className="flex items-center gap-3"><select aria-label="Navigation" value={page} onChange={e=>{setDetail(null);selectPage(e.target.value)}} className="max-w-[150px] rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-xs lg:hidden">{visibleNav.map(n=><option key={n}>{n}</option>)}</select><div className="hidden text-xs text-emerald-300 sm:block">Production API</div><button onClick={async()=>{try{await api.post("/auth/logout")}catch{}finally{logout()}}} className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-800">Sign out</button></div></div></header><div className="p-5 lg:p-8">{content}</div></main></div>}
 export default App;

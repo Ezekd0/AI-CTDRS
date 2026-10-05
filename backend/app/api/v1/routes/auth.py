@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from app.db.session import get_db
 from app.db.models.models import User, RevokedToken
 from app.schemas.auth import RegisterRequest, LoginRequest, AuthResponse, UserResponse
@@ -15,8 +16,16 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
     email = body.email.lower()
     if db.scalar(select(User).where(User.email == email)):
         raise HTTPException(status_code=409, detail='An account with this email already exists')
-    user = User(email=email, password_hash=hash_password(body.password), role='viewer', is_active=True)
-    db.add(user); db.commit(); db.refresh(user)
+    user = User(full_name=body.full_name, email=email, password_hash=hash_password(body.password), role='viewer', is_active=True)
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        if db.scalar(select(User).where(User.email == email)):
+            raise HTTPException(status_code=409, detail='An account with this email already exists')
+        raise
+    db.refresh(user)
     return user
 
 @router.post('/login', response_model=AuthResponse)
