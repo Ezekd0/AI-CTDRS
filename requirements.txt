@@ -1,3 +1,2 @@
+# Production API dependencies (including shared ML inference dependencies).
 -r backend/requirements.txt
--r backend/requirements-dev.txt
--r ml/requirements.txt
