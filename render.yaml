@@ -1,0 +1,29 @@
+databases:
+  - name: ai-ctdrs-db
+    plan: free
+    databaseName: ai_ctdrs
+    user: ai_ctdrs
+
+services:
+  - type: web
+    name: ai-ctdrs-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.backend
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-ctdrs-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+      - key: RESPONSE_MODE
+        value: SIMULATION
+      - key: ENABLE_API_DOCS
+        value: "false"
+      - key: CORS_ORIGINS
+        sync: false   # set to your Vercel URL, e.g. https://ai-ctdrs.vercel.app
