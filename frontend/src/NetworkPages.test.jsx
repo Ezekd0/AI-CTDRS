@@ -8,7 +8,7 @@ vi.mock('./networkTest', () => ({ runNetworkTest: vi.fn() }));
 beforeEach(() => vi.resetAllMocks());
 it('runs a test, displays measurements, and saves only on request', async () => {
   const report = { device_id: 'browser', connectivity_status: 'online', internet_status: 'reachable', latency_ms: 40, download_speed_mbps: 30, upload_speed_mbps: 6, overall_status: 'excellent', metadata: {}, created_at: '2026-10-06T08:00:00Z' };
-  api.get.mockResolvedValue({ data: { items: [] } });
+  api.get.mockResolvedValueOnce({ data: { items: [] } }).mockResolvedValue({ data: { items: [{ ...report, id: 'r1', user_id: 'user-1' }] } });
   api.post.mockResolvedValue({ data: { ...report, id: 'r1' } });
   runNetworkTest.mockResolvedValue(report);
   render(<NetworkMonitorPage/>);
@@ -20,6 +20,8 @@ it('runs a test, displays measurements, and saves only on request', async () => 
   fireEvent.click(screen.getByRole('button', { name: 'Save report' }));
   await waitFor(() => expect(api.post).toHaveBeenCalledWith('/network/reports', report));
   await screen.findByRole('button', { name: 'Report saved' });
+  fireEvent.click(await screen.findByRole('button', { name: 'Inspect' }));
+  expect(screen.getAllByText('40.00 ms')).toHaveLength(2);
 });
 
 

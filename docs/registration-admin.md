@@ -10,13 +10,20 @@ Run the existing migration release step, `cd backend && alembic upgrade head`, a
 
 Set `VITE_API_URL` at frontend build time to the backend API base including `/api`. If the frontend and API share an origin, the default `/api` is sufficient. Existing `VITE_API_BASE_URL` deployments remain supported as a fallback. Configure the existing backend `CORS_ORIGINS` for the frontend origin. The existing Vercel SPA rewrite supports direct visits to the new routes.
 
-Use an existing administrator account, or the existing interactive bootstrap script from `backend`:
+Use an existing administrator account, or run the one-time bootstrap in the Render Web Service Shell. The Docker service working directory is `/app/backend`:
 
 ```sh
-PYTHONPATH=..:. python scripts/create_admin.py --email admin@example.com
+cd /app/backend
+read -r -p "Admin email: " ADMIN_EMAIL
+read -r -p "Admin full name: " ADMIN_FULL_NAME
+read -r -s -p "Admin password: " ADMIN_PASSWORD
+printf '\n'
+export ADMIN_EMAIL ADMIN_FULL_NAME ADMIN_PASSWORD
+PYTHONPATH=..:. python -m scripts.create_admin
+unset ADMIN_EMAIL ADMIN_FULL_NAME ADMIN_PASSWORD
 ```
 
-No administrator credentials are seeded. Users can sign in at `/login` and access `/dashboard`. Ordinary authenticated accounts are redirected from `/admin` and `/admin/users` to `/dashboard`; unauthenticated visits are redirected to `/login`. Sessions are verified with the existing `/api/auth/me`, rather than trusting a stored role.
+The script accepts `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `ADMIN_FULL_NAME`. It validates the same inputs as registration, hashes with the existing Argon2 utility, and creates or updates one active `administrator`. Repeating it updates the same account, including its password and name. The output identifies whether it was created or updated. Login email is the supplied valid email address normalized to lowercase (for example `admin@example.com`); no special administrator username format exists. The password prompt keeps the plaintext out of shell history. No administrator credentials are seeded. Users can sign in at `/login` and access `/dashboard`. Ordinary authenticated accounts are redirected from `/admin` and `/admin/users` to `/dashboard`; unauthenticated visits are redirected to `/login`. Sessions are verified with the existing `/api/auth/me`, rather than trusting a stored role.
 
 ## Admin API
 

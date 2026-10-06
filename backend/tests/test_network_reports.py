@@ -111,6 +111,8 @@ def test_network_reports_are_user_scoped_and_admin_visible(tmp_path):
         admin_list = client.get('/api/network/reports', headers=admin)
         assert admin_list.status_code == 200, admin_list.text
         assert admin_list.json()['count'] >= 1
+        assert client.get('/api/network/reports?user_id=user-1', headers=admin).json()['items'][0]['id'] == report_id
+        assert client.get('/api/network/reports?user_id=user-2', headers=admin).json()['items'] == []
     finally:
         app.dependency_overrides.clear()
 
