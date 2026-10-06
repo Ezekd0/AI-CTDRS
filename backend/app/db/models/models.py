@@ -27,6 +27,7 @@ class User(TimestampMixin, Base):
     alerts: Mapped[list['Alert']] = relationship(back_populates='user', foreign_keys='Alert.user_id')
     response_actions: Mapped[list['ResponseAction']] = relationship(back_populates='user')
     reports: Mapped[list['Report']] = relationship(back_populates='user')
+    network_reports: Mapped[list['NetworkReport']] = relationship(back_populates='user')
 
 class Dataset(TimestampMixin, Base):
     __tablename__ = 'datasets'
@@ -134,6 +135,29 @@ class Report(TimestampMixin, Base):
     metadata_json: Mapped[dict | None] = mapped_column(JSON)
     user: Mapped[User | None] = relationship(back_populates='reports')
     detection: Mapped[Detection | None] = relationship(back_populates='reports')
+
+class NetworkReport(TimestampMixin, Base):
+    __tablename__ = 'network_reports'
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    user_id: Mapped[str | None] = mapped_column(ForeignKey('users.id', ondelete='SET NULL'), index=True)
+    device_id: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    connection_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    connectivity_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    internet_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    network_transport: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    local_ip: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    public_ip: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    dns_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    dns_servers: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
+    carrier: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    signal_strength: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    latency_ms: Mapped[float | None] = mapped_column(Float, nullable=True)
+    packet_loss_pct: Mapped[float | None] = mapped_column(Float, nullable=True)
+    download_speed_mbps: Mapped[float | None] = mapped_column(Float, nullable=True)
+    upload_speed_mbps: Mapped[float | None] = mapped_column(Float, nullable=True)
+    overall_status: Mapped[str] = mapped_column(String(30), default='normal', nullable=False)
+    metadata_json: Mapped[dict | None] = mapped_column(JSON)
+    user: Mapped[User | None] = relationship(back_populates='network_reports')
 
 class RevokedToken(Base):
     __tablename__ = 'revoked_tokens'
