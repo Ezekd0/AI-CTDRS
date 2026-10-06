@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def register_exception_handlers(app):
     @app.exception_handler(RequestValidationError)
     async def validation_handler(request: Request, exc: RequestValidationError):
-        return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={'detail': 'Request validation failed', 'errors': exc.errors()})
+        return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={'detail': 'Request validation failed', 'errors': [{'loc': error['loc'], 'type': error['type'], 'msg': error['msg']} for error in exc.errors()]})
 
     @app.exception_handler(ValueError)
     async def value_handler(request: Request, exc: ValueError):

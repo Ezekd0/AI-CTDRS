@@ -1,11 +1,27 @@
 """Environment-driven application configuration."""
 from functools import lru_cache
 from pathlib import Path
-from pydantic import Field, AliasChoices, field_validator
+from pydantic import Field, AliasChoices, EmailStr, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', extra='ignore', case_sensitive=False, populate_by_name=True)
+    admin_bootstrap_enabled: bool = False
+    admin_bootstrap_key: SecretStr | None = None
+    main_admin_email: EmailStr | None = None
+    main_admin_full_name: str = Field('Ospa Admin', min_length=1, max_length=200)
+
+    @model_validator(mode='after')
+    def _bootstrap_configuration(self):
+        if not self.main_admin_full_name.strip():
+            raise ValueError('MAIN_ADMIN_FULL_NAME cannot be blank')
+        if self.admin_bootstrap_enabled:
+            if not self.main_admin_email or not self.admin_bootstrap_key or len(self.admin_bootstrap_key.get_secret_value()) < 32:
+                raise ValueError('Bootstrap requires MAIN_ADMIN_EMAIL and ADMIN_BOOTSTRAP_KEY of at least 32 characters')
+            if self.admin_bootstrap_key.get_secret_value() == self.secret_key:
+                raise ValueError('Bootstrap key must differ from the JWT secret')
+        return self
+
     app_name: str = 'AI-CTDRS'
     app_version: str = '1.0.0'
     environment: str = 'development'
