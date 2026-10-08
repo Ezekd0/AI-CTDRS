@@ -1,0 +1,616 @@
+{
+  "model": "random_forest",
+  "explainer": "shap.TreeExplainer",
+  "n_samples": 1000,
+  "feature_importance": [
+    {
+      "feature_name": "src_bytes",
+      "mean_abs_shap": 0.08226655094218377,
+      "mean_shap": -3.738836714187177e-15
+    },
+    {
+      "feature_name": "dst_bytes",
+      "mean_abs_shap": 0.07633995837922423,
+      "mean_shap": -4.377088969054199e-16
+    },
+    {
+      "feature_name": "dst_host_srv_count",
+      "mean_abs_shap": 0.03404721072210071,
+      "mean_shap": 3.5788754772225763e-17
+    },
+    {
+      "feature_name": "dst_host_same_srv_rate",
+      "mean_abs_shap": 0.028786477187412392,
+      "mean_shap": -3.992899886868118e-14
+    },
+    {
+      "feature_name": "same_srv_rate",
+      "mean_abs_shap": 0.027971899476965153,
+      "mean_shap": -7.826556243373251e-16
+    },
+    {
+      "feature_name": "count",
+      "mean_abs_shap": 0.026107584618197607,
+      "mean_shap": -3.3648109797577986e-15
+    },
+    {
+      "feature_name": "logged_in",
+      "mean_abs_shap": 0.02371450480225529,
+      "mean_shap": 4.430615488208722e-16
+    },
+    {
+      "feature_name": "flag_sf",
+      "mean_abs_shap": 0.0236938168987008,
+      "mean_shap": -2.304372486014103e-15
+    },
+    {
+      "feature_name": "dst_host_diff_srv_rate",
+      "mean_abs_shap": 0.02060997523374344,
+      "mean_shap": -1.1221187282313417e-15
+    },
+    {
+      "feature_name": "diff_srv_rate",
+      "mean_abs_shap": 0.019475549215292057,
+      "mean_shap": 2.5430048691821303e-16
+    },
+    {
+      "feature_name": "service_private",
+      "mean_abs_shap": 0.017319554411041615,
+      "mean_shap": 1.0218477539819526e-15
+    },
+    {
+      "feature_name": "protocol_type_icmp",
+      "mean_abs_shap": 0.01718364170755631,
+      "mean_shap": 2.773634186908902e-16
+    },
+    {
+      "feature_name": "dst_host_serror_rate",
+      "mean_abs_shap": 0.01718189009270456,
+      "mean_shap": -1.379868929621969e-15
+    },
+    {
+      "feature_name": "service_http",
+      "mean_abs_shap": 0.015575605865312153,
+      "mean_shap": -1.5670423942834578e-15
+    },
+    {
+      "feature_name": "dst_host_same_src_port_rate",
+      "mean_abs_shap": 0.01548428669445001,
+      "mean_shap": -9.862274232409588e-16
+    },
+    {
+      "feature_name": "dst_host_rerror_rate",
+      "mean_abs_shap": 0.015468014514929265,
+      "mean_shap": 2.934662387231446e-15
+    },
+    {
+      "feature_name": "dst_host_srv_serror_rate",
+      "mean_abs_shap": 0.015383754023525079,
+      "mean_shap": -4.2326233663791956e-16
+    },
+    {
+      "feature_name": "rerror_rate",
+      "mean_abs_shap": 0.0125360970896269,
+      "mean_shap": 3.6694144901414097e-17
+    },
+    {
+      "feature_name": "srv_serror_rate",
+      "mean_abs_shap": 0.012411795944075267,
+      "mean_shap": 4.4301734047728914e-17
+    },
+    {
+      "feature_name": "flag_s0",
+      "mean_abs_shap": 0.00981069554176747,
+      "mean_shap": 1.6866164260847475e-16
+    },
+    {
+      "feature_name": "dst_host_srv_rerror_rate",
+      "mean_abs_shap": 0.00979841460778005,
+      "mean_shap": 4.386136153374811e-16
+    },
+    {
+      "feature_name": "service_ecr_i",
+      "mean_abs_shap": 0.009610007444674573,
+      "mean_shap": -3.6094640731149097e-16
+    },
+    {
+      "feature_name": "serror_rate",
+      "mean_abs_shap": 0.008500403397404308,
+      "mean_shap": 3.9022543605726075e-17
+    },
+    {
+      "feature_name": "protocol_type_tcp",
+      "mean_abs_shap": 0.008067424394812313,
+      "mean_shap": -3.2631257857471466e-16
+    },
+    {
+      "feature_name": "dst_host_srv_diff_host_rate",
+      "mean_abs_shap": 0.007880491681945065,
+      "mean_shap": 1.4469713240781146e-16
+    },
+    {
+      "feature_name": "dst_host_count",
+      "mean_abs_shap": 0.007570276235246741,
+      "mean_shap": 9.607743610027739e-17
+    },
+    {
+      "feature_name": "hot",
+      "mean_abs_shap": 0.006436970777233447,
+      "mean_shap": 3.4638194981555234e-14
+    },
+    {
+      "feature_name": "srv_count",
+      "mean_abs_shap": 0.005472399611764796,
+      "mean_shap": -1.0853800857245929e-15
+    },
+    {
+      "feature_name": "srv_rerror_rate",
+      "mean_abs_shap": 0.004457542018921853,
+      "mean_shap": -9.701544589178095e-17
+    },
+    {
+      "feature_name": "service_domain_u",
+      "mean_abs_shap": 0.003772541421964682,
+      "mean_shap": 7.967682503356999e-17
+    },
+    {
+      "feature_name": "num_compromised",
+      "mean_abs_shap": 0.0036576635820641436,
+      "mean_shap": -2.7424592002715797e-15
+    },
+    {
+      "feature_name": "service_eco_i",
+      "mean_abs_shap": 0.0029649295053483034,
+      "mean_shap": -1.6279407978790301e-15
+    },
+    {
+      "feature_name": "flag_rstr",
+      "mean_abs_shap": 0.0027933413744390704,
+      "mean_shap": -8.32331165795397e-18
+    },
+    {
+      "feature_name": "srv_diff_srv_rate",
+      "mean_abs_shap": 0.002670714733990531,
+      "mean_shap": -3.3332289845778373e-15
+    },
+    {
+      "feature_name": "service_ftp_data",
+      "mean_abs_shap": 0.0025310123564212194,
+      "mean_shap": -6.270639766612414e-16
+    },
+    {
+      "feature_name": "duration",
+      "mean_abs_shap": 0.00232697732357167,
+      "mean_shap": 4.1048662128019533e-16
+    },
+    {
+      "feature_name": "service_ftp",
+      "mean_abs_shap": 0.0020072342421342446,
+      "mean_shap": -2.18748150688269e-16
+    },
+    {
+      "feature_name": "wrong_fragment",
+      "mean_abs_shap": 0.0018552193755943878,
+      "mean_shap": 5.346011177145837e-17
+    },
+    {
+      "feature_name": "protocol_type_udp",
+      "mean_abs_shap": 0.001802858728051655,
+      "mean_shap": 9.208455455065614e-17
+    },
+    {
+      "feature_name": "is_guest_login",
+      "mean_abs_shap": 0.001695892586071489,
+      "mean_shap": 1.4367174815024375e-16
+    },
+    {
+      "feature_name": "service_smtp",
+      "mean_abs_shap": 0.0013379446168578022,
+      "mean_shap": 2.5070592557665345e-17
+    },
+    {
+      "feature_name": "flag_rej",
+      "mean_abs_shap": 0.0008196320628639592,
+      "mean_shap": 1.44745299306934e-18
+    },
+    {
+      "feature_name": "service_other",
+      "mean_abs_shap": 0.0007796026725907783,
+      "mean_shap": -7.823740126300753e-16
+    },
+    {
+      "feature_name": "service_telnet",
+      "mean_abs_shap": 0.0007716724491429494,
+      "mean_shap": 4.529293517897945e-17
+    },
+    {
+      "feature_name": "service_urp_i",
+      "mean_abs_shap": 0.0005763969845484585,
+      "mean_shap": 9.438738853007056e-18
+    },
+    {
+      "feature_name": "flag_sh",
+      "mean_abs_shap": 0.0004194661456092732,
+      "mean_shap": 1.0933823155678465e-18
+    },
+    {
+      "feature_name": "num_failed_logins",
+      "mean_abs_shap": 0.0003786857967112333,
+      "mean_shap": -4.829606371664053e-16
+    },
+    {
+      "feature_name": "flag_s1",
+      "mean_abs_shap": 0.0003662951341354873,
+      "mean_shap": 2.535169611132121e-19
+    },
+    {
+      "feature_name": "service_auth",
+      "mean_abs_shap": 0.00027759366202722966,
+      "mean_shap": 1.4965906660648065e-17
+    },
+    {
+      "feature_name": "flag_rsto",
+      "mean_abs_shap": 0.0002644086502224214,
+      "mean_shap": -4.7319689489497074e-18
+    },
+    {
+      "feature_name": "service_irc",
+      "mean_abs_shap": 0.0002436063379896346,
+      "mean_shap": -9.642623071542956e-19
+    },
+    {
+      "feature_name": "service_finger",
+      "mean_abs_shap": 0.00023095394097119983,
+      "mean_shap": -2.7643030644388764e-16
+    },
+    {
+      "feature_name": "service_imap4",
+      "mean_abs_shap": 0.00020012969367632163,
+      "mean_shap": 2.9929824487935975e-18
+    },
+    {
+      "feature_name": "service_pm_dump",
+      "mean_abs_shap": 0.00019979501076537392,
+      "mean_shap": -2.1908279328869667e-17
+    },
+    {
+      "feature_name": "num_root",
+      "mean_abs_shap": 0.00018950443329655918,
+      "mean_shap": 5.88947340298318e-17
+    },
+    {
+      "feature_name": "service_time",
+      "mean_abs_shap": 0.00016838269793401526,
+      "mean_shap": -6.31385959680568e-17
+    },
+    {
+      "feature_name": "num_file_creations",
+      "mean_abs_shap": 0.0001476304272807948,
+      "mean_shap": 4.726345135900394e-17
+    },
+    {
+      "feature_name": "root_shell",
+      "mean_abs_shap": 0.00010873227792365268,
+      "mean_shap": -8.678303023211437e-17
+    },
+    {
+      "feature_name": "service_x11",
+      "mean_abs_shap": 0.00010238915757844851,
+      "mean_shap": -2.8124843864149163e-18
+    },
+    {
+      "feature_name": "num_shells",
+      "mean_abs_shap": 9.877547824295098e-05,
+      "mean_shap": -3.170572911762151e-18
+    },
+    {
+      "feature_name": "flag_s3",
+      "mean_abs_shap": 9.658462629980397e-05,
+      "mean_shap": -3.5533932109824357e-19
+    },
+    {
+      "feature_name": "service_pop_3",
+      "mean_abs_shap": 7.758013328169272e-05,
+      "mean_shap": 5.96845511720485e-17
+    },
+    {
+      "feature_name": "land",
+      "mean_abs_shap": 6.111290681796301e-05,
+      "mean_shap": 1.6692660271275257e-20
+    },
+    {
+      "feature_name": "flag_rstos0",
+      "mean_abs_shap": 6.0476723130392265e-05,
+      "mean_shap": -1.0812392512360089e-18
+    },
+    {
+      "feature_name": "service_gopher",
+      "mean_abs_shap": 4.7858610828172766e-05,
+      "mean_shap": -1.1435971391865126e-17
+    },
+    {
+      "feature_name": "service_ntp_u",
+      "mean_abs_shap": 4.355983160025314e-05,
+      "mean_shap": 1.3748954096537077e-19
+    },
+    {
+      "feature_name": "flag_s2",
+      "mean_abs_shap": 4.010062493220733e-05,
+      "mean_shap": 4.744928222170452e-19
+    },
+    {
+      "feature_name": "num_access_files",
+      "mean_abs_shap": 3.862257239574472e-05,
+      "mean_shap": -6.11739429761494e-16
+    },
+    {
+      "feature_name": "service_uucp",
+      "mean_abs_shap": 3.835694128223429e-05,
+      "mean_shap": -7.786011554456255e-20
+    },
+    {
+      "feature_name": "service_domain",
+      "mean_abs_shap": 2.7299604515196887e-05,
+      "mean_shap": 1.213509547233966e-18
+    },
+    {
+      "feature_name": "service_iso_tsap",
+      "mean_abs_shap": 2.720056478309581e-05,
+      "mean_shap": -1.3727693569560996e-19
+    },
+    {
+      "feature_name": "service_ssh",
+      "mean_abs_shap": 2.620733712211979e-05,
+      "mean_shap": 5.479754582553078e-20
+    },
+    {
+      "feature_name": "flag_oth",
+      "mean_abs_shap": 2.5146150458669584e-05,
+      "mean_shap": 4.13375260823946e-19
+    },
+    {
+      "feature_name": "service_vmnet",
+      "mean_abs_shap": 1.780743972698738e-05,
+      "mean_shap": -1.7295819859869736e-19
+    },
+    {
+      "feature_name": "service_nntp",
+      "mean_abs_shap": 1.706840367355081e-05,
+      "mean_shap": 8.250100906256886e-20
+    },
+    {
+      "feature_name": "service_tftp_u",
+      "mean_abs_shap": 1.2991059001820529e-05,
+      "mean_shap": 1.5923435902904635e-19
+    },
+    {
+      "feature_name": "service_http_443",
+      "mean_abs_shap": 1.289354735174619e-05,
+      "mean_shap": -2.5780612419987107e-20
+    },
+    {
+      "feature_name": "service_login",
+      "mean_abs_shap": 1.2058352265149895e-05,
+      "mean_shap": -2.71644736733875e-19
+    },
+    {
+      "feature_name": "service_red_i",
+      "mean_abs_shap": 1.2003874732305793e-05,
+      "mean_shap": 2.3649964568639956e-19
+    },
+    {
+      "feature_name": "urgent",
+      "mean_abs_shap": 1.1355751646229584e-05,
+      "mean_shap": -9.518212354557901e-18
+    },
+    {
+      "feature_name": "service_pop_2",
+      "mean_abs_shap": 1.1324726659852945e-05,
+      "mean_shap": -1.4169576364462577e-17
+    },
+    {
+      "feature_name": "service_echo",
+      "mean_abs_shap": 1.0875776438256175e-05,
+      "mean_shap": 6.355129384571406e-20
+    },
+    {
+      "feature_name": "su_attempted",
+      "mean_abs_shap": 1.083062853906266e-05,
+      "mean_shap": -3.7537070503189097e-17
+    },
+    {
+      "feature_name": "service_tim_i",
+      "mean_abs_shap": 1.0199845547833654e-05,
+      "mean_shap": -1.1544142554957404e-19
+    },
+    {
+      "feature_name": "service_daytime",
+      "mean_abs_shap": 9.578620150174174e-06,
+      "mean_shap": -1.7235009776399572e-18
+    },
+    {
+      "feature_name": "service_shell",
+      "mean_abs_shap": 8.210268130149103e-06,
+      "mean_shap": -1.1596939508223194e-18
+    },
+    {
+      "feature_name": "service_courier",
+      "mean_abs_shap": 7.964509183898863e-06,
+      "mean_shap": -6.053808001497528e-20
+    },
+    {
+      "feature_name": "service_sunrpc",
+      "mean_abs_shap": 7.244040106036029e-06,
+      "mean_shap": 1.9911150551547635e-19
+    },
+    {
+      "feature_name": "service_discard",
+      "mean_abs_shap": 7.203732745226278e-06,
+      "mean_shap": -2.8513881861658324e-20
+    },
+    {
+      "feature_name": "service_name",
+      "mean_abs_shap": 6.31200823799443e-06,
+      "mean_shap": 4.2619521532284187e-20
+    },
+    {
+      "feature_name": "service_urh_i",
+      "mean_abs_shap": 5.664456367597004e-06,
+      "mean_shap": 5.6227434055191585e-19
+    },
+    {
+      "feature_name": "service_klogin",
+      "mean_abs_shap": 5.171615127444822e-06,
+      "mean_shap": -1.1303813499786248e-20
+    },
+    {
+      "feature_name": "service_bgp",
+      "mean_abs_shap": 3.9680275220789024e-06,
+      "mean_shap": 3.109732705682802e-19
+    },
+    {
+      "feature_name": "service_whois",
+      "mean_abs_shap": 3.8589397114836314e-06,
+      "mean_shap": -6.85141392930158e-20
+    },
+    {
+      "feature_name": "service_netbios_ssn",
+      "mean_abs_shap": 3.1081264395641483e-06,
+      "mean_shap": -2.0475797272566133e-20
+    },
+    {
+      "feature_name": "service_rje",
+      "mean_abs_shap": 3.096577068958816e-06,
+      "mean_shap": -7.800781691474001e-20
+    },
+    {
+      "feature_name": "service_csnet_ns",
+      "mean_abs_shap": 2.9464840935274253e-06,
+      "mean_shap": 1.2951448092151022e-20
+    },
+    {
+      "feature_name": "service_remote_job",
+      "mean_abs_shap": 2.858559926146626e-06,
+      "mean_shap": -1.0484748786356896e-18
+    },
+    {
+      "feature_name": "service_link",
+      "mean_abs_shap": 2.831487196797148e-06,
+      "mean_shap": 1.7188336672819084e-20
+    },
+    {
+      "feature_name": "service_supdup",
+      "mean_abs_shap": 2.8213610858362485e-06,
+      "mean_shap": 3.908572654611885e-20
+    },
+    {
+      "feature_name": "service_ctf",
+      "mean_abs_shap": 2.522965499882272e-06,
+      "mean_shap": -5.115331891886716e-18
+    },
+    {
+      "feature_name": "service_efs",
+      "mean_abs_shap": 2.240444969033597e-06,
+      "mean_shap": 1.269715622823997e-20
+    },
+    {
+      "feature_name": "service_netstat",
+      "mean_abs_shap": 2.2295275792390973e-06,
+      "mean_shap": -3.951640309512826e-20
+    },
+    {
+      "feature_name": "service_uucp_path",
+      "mean_abs_shap": 2.149658798609603e-06,
+      "mean_shap": -1.2020539030783845e-21
+    },
+    {
+      "feature_name": "service_mtp",
+      "mean_abs_shap": 2.1366132941634326e-06,
+      "mean_shap": -1.1850835318056955e-19
+    },
+    {
+      "feature_name": "service_printer",
+      "mean_abs_shap": 1.9020741036753321e-06,
+      "mean_shap": -1.0336891641526472e-19
+    },
+    {
+      "feature_name": "service_z39_50",
+      "mean_abs_shap": 1.502930695618809e-06,
+      "mean_shap": 5.2220626754521884e-20
+    },
+    {
+      "feature_name": "service_sql_net",
+      "mean_abs_shap": 1.190131287215053e-06,
+      "mean_shap": -1.673088594174256e-22
+    },
+    {
+      "feature_name": "service_exec",
+      "mean_abs_shap": 1.0803554265906496e-06,
+      "mean_shap": -1.7845541595659817e-20
+    },
+    {
+      "feature_name": "service_ldap",
+      "mean_abs_shap": 8.732635650947703e-07,
+      "mean_shap": 7.572292568718683e-21
+    },
+    {
+      "feature_name": "service_systat",
+      "mean_abs_shap": 7.725097446058515e-07,
+      "mean_shap": -5.608258175974154e-18
+    },
+    {
+      "feature_name": "is_host_login",
+      "mean_abs_shap": 4.7256684896415744e-07,
+      "mean_shap": 1.1925711045360766e-22
+    },
+    {
+      "feature_name": "service_kshell",
+      "mean_abs_shap": 4.4804324461644416e-07,
+      "mean_shap": 1.5052801176668482e-21
+    },
+    {
+      "feature_name": "service_netbios_dgm",
+      "mean_abs_shap": 4.4436225290054087e-07,
+      "mean_shap": -6.504286592626967e-21
+    },
+    {
+      "feature_name": "service_hostnames",
+      "mean_abs_shap": 4.075924123618052e-07,
+      "mean_shap": -5.975173896362523e-21
+    },
+    {
+      "feature_name": "service_nnsp",
+      "mean_abs_shap": 4.0496408485104877e-07,
+      "mean_shap": -4.8373240980692793e-20
+    },
+    {
+      "feature_name": "service_netbios_ns",
+      "mean_abs_shap": 3.284168174173248e-07,
+      "mean_shap": -3.0403102823725335e-20
+    },
+    {
+      "feature_name": "service_http_8001",
+      "mean_abs_shap": 0.0,
+      "mean_shap": 0.0
+    },
+    {
+      "feature_name": "service_aol",
+      "mean_abs_shap": 0.0,
+      "mean_shap": 0.0
+    },
+    {
+      "feature_name": "service_harvest",
+      "mean_abs_shap": 0.0,
+      "mean_shap": 0.0
+    },
+    {
+      "feature_name": "service_http_2784",
+      "mean_abs_shap": 0.0,
+      "mean_shap": 0.0
+    }
+  ],
+  "class_names": [
+    "normal",
+    "ATTACK"
+  ]
+}

@@ -1,7 +1,8 @@
 # Shared production ML inference dependencies.
-numpy>=1.26
-pandas>=2.1
-scikit-learn>=1.4
+# Match the bundled NSL-KDD model/preprocessor serialization environment.
+numpy==2.5.3
+pandas==3.0.6
+scikit-learn==1.9.1
 joblib>=1.3
 # CPU inference avoids the full Linux wheel's NVIDIA runtime dependencies.
 xgboost-cpu>=2.1; platform_system == "Linux"

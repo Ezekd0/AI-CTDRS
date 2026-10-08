@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "run_id": "649814a2b1a046378344f58aa85f6f94",
+  "created_at_utc": "2026-10-06T16:23:15+00:00",
+  "command": "python -m ml.training.train --dataset nsl-kdd --task binary --model random_forest --preprocess-if-missing",
+  "dataset": "nsl-kdd",
+  "dataset_display_name": "NSL-KDD",
+  "task": "binary",
+  "model": "random_forest",
+  "model_params": {
+    "n_estimators": 200,
+    "max_depth": null,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt"
+  },
+  "seed": 42,
+  "class_weight_mode": "balanced",
+  "n_features": 121,
+  "class_names": [
+    "normal",
+    "ATTACK"
+  ],
+  "split": {
+    "task": "binary",
+    "stratified_on": "attack_category_id",
+    "validation_split": {
+      "requested_fraction": 0.1,
+      "rare_classes_kept_in_train": [],
+      "stratified": true,
+      "n_holdout": 12597
+    },
+    "max_train_rows": null,
+    "n_train": 113376,
+    "n_val": 12597,
+    "n_test": 22544,
+    "train_distribution": {
+      "normal": 60609,
+      "ATTACK": 52767
+    },
+    "val_distribution": {
+      "normal": 6734,
+      "ATTACK": 5863
+    },
+    "test_distribution": {
+      "normal": 9711,
+      "ATTACK": 12833
+    },
+    "test_split_origin": "official split"
+  },
+  "data_files": {
+    "train": {
+      "name": "train.csv.gz",
+      "sha256": "87739089484435062515a310e8328f3dc4c3afe571c2fedde8307563d6c3a6cc"
+    },
+    "test": {
+      "name": "test.csv.gz",
+      "sha256": "22842d49f8a6353cab88db75db9eff67a6ff672daf61b21f87dc128099ae3d87"
+    },
+    "preprocessor": {
+      "name": "preprocessor.joblib",
+      "sha256": "51d54924f2e71181feade6aca1b1552a72b0d778c4447f36f8121ea9983d4377"
+    },
+    "preprocessing_report": {
+      "name": "preprocessing_report.json",
+      "sha256": "a6fc46a20dc8fc00ecff319822749e5b29516440dbb3a37494f402a11e89161d"
+    }
+  },
+  "training": {
+    "fit_seconds": 27.562,
+    "total_seconds": 29.811
+  },
+  "validation_metrics": {
+    "accuracy": 0.9991267762165595,
+    "precision": 0.9993174061433447,
+    "recall": 0.9988060719768037,
+    "f1_score": 0.9990616736330291,
+    "average": "binary",
+    "roc_auc": 0.9999933133141388
+  },
+  "libraries": {
+    "python": "3.14.3",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1"
+  },
+  "git_commit": "cffee71ff7e86d41ec2c36648fddcc63fc98db85",
+  "artifact_files": {
+    "model": "model.joblib",
+    "feature_names": "feature_names.json",
+    "label_encoder": "label_encoder.joblib",
+    "label_mapping": "label_mapping.json",
+    "metrics": "metrics.json",
+    "metadata": "metadata.json",
+    "preprocessor": "preprocessor.joblib",
+    "preprocessing_report": "preprocessing_report.json"
+  },
+  "lime_background_samples": 500
+}

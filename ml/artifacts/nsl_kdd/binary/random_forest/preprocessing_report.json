@@ -1,0 +1,555 @@
+{
+  "files": {
+    "train": "KDDTrain+.txt",
+    "test": "KDDTest+.txt"
+  },
+  "train": {
+    "rows_loaded": 125973,
+    "rows_missing_label_removed": 0,
+    "duplicates_removed": 0,
+    "invalid_numeric_cells": 0,
+    "infinite_cells_replaced": 0,
+    "missing_categorical_cells": 0,
+    "rows_after_cleaning": 125973,
+    "attack_category_distribution": {
+      "normal": {
+        "count": 67343,
+        "percent": 53.4583
+      },
+      "DoS": {
+        "count": 45927,
+        "percent": 36.4578
+      },
+      "Probe": {
+        "count": 11656,
+        "percent": 9.2528
+      },
+      "R2L": {
+        "count": 995,
+        "percent": 0.7899
+      },
+      "U2R": {
+        "count": 52,
+        "percent": 0.0413
+      }
+    },
+    "attack_type_distribution": {
+      "normal": {
+        "count": 67343,
+        "percent": 53.4583
+      },
+      "neptune": {
+        "count": 41214,
+        "percent": 32.7165
+      },
+      "satan": {
+        "count": 3633,
+        "percent": 2.884
+      },
+      "ipsweep": {
+        "count": 3599,
+        "percent": 2.857
+      },
+      "portsweep": {
+        "count": 2931,
+        "percent": 2.3267
+      },
+      "smurf": {
+        "count": 2646,
+        "percent": 2.1005
+      },
+      "nmap": {
+        "count": 1493,
+        "percent": 1.1852
+      },
+      "back": {
+        "count": 956,
+        "percent": 0.7589
+      },
+      "teardrop": {
+        "count": 892,
+        "percent": 0.7081
+      },
+      "warezclient": {
+        "count": 890,
+        "percent": 0.7065
+      },
+      "pod": {
+        "count": 201,
+        "percent": 0.1596
+      },
+      "guess_passwd": {
+        "count": 53,
+        "percent": 0.0421
+      },
+      "buffer_overflow": {
+        "count": 30,
+        "percent": 0.0238
+      },
+      "warezmaster": {
+        "count": 20,
+        "percent": 0.0159
+      },
+      "land": {
+        "count": 18,
+        "percent": 0.0143
+      },
+      "imap": {
+        "count": 11,
+        "percent": 0.0087
+      },
+      "rootkit": {
+        "count": 10,
+        "percent": 0.0079
+      },
+      "loadmodule": {
+        "count": 9,
+        "percent": 0.0071
+      },
+      "ftp_write": {
+        "count": 8,
+        "percent": 0.0064
+      },
+      "multihop": {
+        "count": 7,
+        "percent": 0.0056
+      },
+      "phf": {
+        "count": 4,
+        "percent": 0.0032
+      },
+      "perl": {
+        "count": 3,
+        "percent": 0.0024
+      },
+      "spy": {
+        "count": 2,
+        "percent": 0.0016
+      }
+    }
+  },
+  "test": {
+    "rows_loaded": 22544,
+    "rows_missing_label_removed": 0,
+    "duplicates_removed": 0,
+    "invalid_numeric_cells": 0,
+    "infinite_cells_replaced": 0,
+    "missing_categorical_cells": 0,
+    "rows_after_cleaning": 22544,
+    "attack_category_distribution": {
+      "normal": {
+        "count": 9711,
+        "percent": 43.0758
+      },
+      "DoS": {
+        "count": 7460,
+        "percent": 33.0908
+      },
+      "R2L": {
+        "count": 2885,
+        "percent": 12.7972
+      },
+      "Probe": {
+        "count": 2421,
+        "percent": 10.739
+      },
+      "U2R": {
+        "count": 67,
+        "percent": 0.2972
+      }
+    },
+    "attack_type_distribution": {
+      "normal": {
+        "count": 9711,
+        "percent": 43.0758
+      },
+      "neptune": {
+        "count": 4657,
+        "percent": 20.6574
+      },
+      "guess_passwd": {
+        "count": 1231,
+        "percent": 5.4604
+      },
+      "mscan": {
+        "count": 996,
+        "percent": 4.418
+      },
+      "warezmaster": {
+        "count": 944,
+        "percent": 4.1874
+      },
+      "apache2": {
+        "count": 737,
+        "percent": 3.2692
+      },
+      "satan": {
+        "count": 735,
+        "percent": 3.2603
+      },
+      "processtable": {
+        "count": 685,
+        "percent": 3.0385
+      },
+      "smurf": {
+        "count": 665,
+        "percent": 2.9498
+      },
+      "back": {
+        "count": 359,
+        "percent": 1.5924
+      },
+      "snmpguess": {
+        "count": 331,
+        "percent": 1.4682
+      },
+      "saint": {
+        "count": 319,
+        "percent": 1.415
+      },
+      "mailbomb": {
+        "count": 293,
+        "percent": 1.2997
+      },
+      "snmpgetattack": {
+        "count": 178,
+        "percent": 0.7896
+      },
+      "portsweep": {
+        "count": 157,
+        "percent": 0.6964
+      },
+      "ipsweep": {
+        "count": 141,
+        "percent": 0.6254
+      },
+      "httptunnel": {
+        "count": 133,
+        "percent": 0.59
+      },
+      "nmap": {
+        "count": 73,
+        "percent": 0.3238
+      },
+      "pod": {
+        "count": 41,
+        "percent": 0.1819
+      },
+      "buffer_overflow": {
+        "count": 20,
+        "percent": 0.0887
+      },
+      "multihop": {
+        "count": 18,
+        "percent": 0.0798
+      },
+      "named": {
+        "count": 17,
+        "percent": 0.0754
+      },
+      "ps": {
+        "count": 15,
+        "percent": 0.0665
+      },
+      "sendmail": {
+        "count": 14,
+        "percent": 0.0621
+      },
+      "xterm": {
+        "count": 13,
+        "percent": 0.0577
+      },
+      "rootkit": {
+        "count": 13,
+        "percent": 0.0577
+      },
+      "teardrop": {
+        "count": 12,
+        "percent": 0.0532
+      },
+      "xlock": {
+        "count": 9,
+        "percent": 0.0399
+      },
+      "land": {
+        "count": 7,
+        "percent": 0.0311
+      },
+      "xsnoop": {
+        "count": 4,
+        "percent": 0.0177
+      },
+      "ftp_write": {
+        "count": 3,
+        "percent": 0.0133
+      },
+      "loadmodule": {
+        "count": 2,
+        "percent": 0.0089
+      },
+      "worm": {
+        "count": 2,
+        "percent": 0.0089
+      },
+      "perl": {
+        "count": 2,
+        "percent": 0.0089
+      },
+      "sqlattack": {
+        "count": 2,
+        "percent": 0.0089
+      },
+      "udpstorm": {
+        "count": 2,
+        "percent": 0.0089
+      },
+      "phf": {
+        "count": 2,
+        "percent": 0.0089
+      },
+      "imap": {
+        "count": 1,
+        "percent": 0.0044
+      }
+    }
+  },
+  "n_train": 125973,
+  "n_test": 22544,
+  "n_features": 121,
+  "feature_names": [
+    "duration",
+    "src_bytes",
+    "dst_bytes",
+    "land",
+    "wrong_fragment",
+    "urgent",
+    "hot",
+    "num_failed_logins",
+    "logged_in",
+    "num_compromised",
+    "root_shell",
+    "su_attempted",
+    "num_root",
+    "num_file_creations",
+    "num_shells",
+    "num_access_files",
+    "is_host_login",
+    "is_guest_login",
+    "count",
+    "srv_count",
+    "serror_rate",
+    "srv_serror_rate",
+    "rerror_rate",
+    "srv_rerror_rate",
+    "same_srv_rate",
+    "diff_srv_rate",
+    "srv_diff_srv_rate",
+    "dst_host_count",
+    "dst_host_srv_count",
+    "dst_host_same_srv_rate",
+    "dst_host_diff_srv_rate",
+    "dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate",
+    "dst_host_serror_rate",
+    "dst_host_srv_serror_rate",
+    "dst_host_rerror_rate",
+    "dst_host_srv_rerror_rate",
+    "protocol_type_icmp",
+    "protocol_type_tcp",
+    "protocol_type_udp",
+    "service_aol",
+    "service_auth",
+    "service_bgp",
+    "service_courier",
+    "service_csnet_ns",
+    "service_ctf",
+    "service_daytime",
+    "service_discard",
+    "service_domain",
+    "service_domain_u",
+    "service_echo",
+    "service_eco_i",
+    "service_ecr_i",
+    "service_efs",
+    "service_exec",
+    "service_finger",
+    "service_ftp",
+    "service_ftp_data",
+    "service_gopher",
+    "service_harvest",
+    "service_hostnames",
+    "service_http",
+    "service_http_2784",
+    "service_http_443",
+    "service_http_8001",
+    "service_imap4",
+    "service_irc",
+    "service_iso_tsap",
+    "service_klogin",
+    "service_kshell",
+    "service_ldap",
+    "service_link",
+    "service_login",
+    "service_mtp",
+    "service_name",
+    "service_netbios_dgm",
+    "service_netbios_ns",
+    "service_netbios_ssn",
+    "service_netstat",
+    "service_nnsp",
+    "service_nntp",
+    "service_ntp_u",
+    "service_other",
+    "service_pm_dump",
+    "service_pop_2",
+    "service_pop_3",
+    "service_printer",
+    "service_private",
+    "service_red_i",
+    "service_remote_job",
+    "service_rje",
+    "service_shell",
+    "service_smtp",
+    "service_sql_net",
+    "service_ssh",
+    "service_sunrpc",
+    "service_supdup",
+    "service_systat",
+    "service_telnet",
+    "service_tftp_u",
+    "service_tim_i",
+    "service_time",
+    "service_urh_i",
+    "service_urp_i",
+    "service_uucp",
+    "service_uucp_path",
+    "service_vmnet",
+    "service_whois",
+    "service_x11",
+    "service_z39_50",
+    "flag_oth",
+    "flag_rej",
+    "flag_rsto",
+    "flag_rstos0",
+    "flag_rstr",
+    "flag_s0",
+    "flag_s1",
+    "flag_s2",
+    "flag_s3",
+    "flag_sf",
+    "flag_sh"
+  ],
+  "dropped_columns": {
+    "constant": [
+      "num_outbound_cmds"
+    ]
+  },
+  "log_transformed_columns": [
+    "duration",
+    "src_bytes",
+    "dst_bytes"
+  ],
+  "scaled_columns": [
+    "duration",
+    "src_bytes",
+    "dst_bytes",
+    "wrong_fragment",
+    "urgent",
+    "hot",
+    "num_failed_logins",
+    "num_compromised",
+    "num_root",
+    "num_file_creations",
+    "num_shells",
+    "num_access_files",
+    "count",
+    "srv_count",
+    "serror_rate",
+    "srv_serror_rate",
+    "rerror_rate",
+    "srv_rerror_rate",
+    "same_srv_rate",
+    "diff_srv_rate",
+    "srv_diff_srv_rate",
+    "dst_host_count",
+    "dst_host_srv_count",
+    "dst_host_same_srv_rate",
+    "dst_host_diff_srv_rate",
+    "dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate",
+    "dst_host_serror_rate",
+    "dst_host_srv_serror_rate",
+    "dst_host_rerror_rate",
+    "dst_host_srv_rerror_rate"
+  ],
+  "categorical_cardinalities": {
+    "protocol_type": 3,
+    "service": 70,
+    "flag": 11
+  },
+  "attack_category_classes": [
+    "DoS",
+    "Probe",
+    "R2L",
+    "U2R",
+    "normal"
+  ],
+  "attack_type_classes_train": [
+    "back",
+    "buffer_overflow",
+    "ftp_write",
+    "guess_passwd",
+    "imap",
+    "ipsweep",
+    "land",
+    "loadmodule",
+    "multihop",
+    "neptune",
+    "nmap",
+    "normal",
+    "perl",
+    "phf",
+    "pod",
+    "portsweep",
+    "rootkit",
+    "satan",
+    "smurf",
+    "spy",
+    "teardrop",
+    "warezclient",
+    "warezmaster"
+  ],
+  "test_attack_types_unseen_in_train": [
+    "apache2",
+    "httptunnel",
+    "mailbomb",
+    "mscan",
+    "named",
+    "processtable",
+    "ps",
+    "saint",
+    "sendmail",
+    "snmpgetattack",
+    "snmpguess",
+    "sqlattack",
+    "udpstorm",
+    "worm",
+    "xlock",
+    "xsnoop",
+    "xterm"
+  ],
+  "test_rows_with_unseen_attack_type": 3750,
+  "test_unseen_categorical_values": {},
+  "test_rows_identical_to_train_features": 664,
+  "config": {
+    "scale": true,
+    "log_transform": true,
+    "log_transform_columns": [
+      "duration",
+      "src_bytes",
+      "dst_bytes"
+    ],
+    "drop_duplicates_train": true,
+    "benign_label": "normal"
+  }
+}

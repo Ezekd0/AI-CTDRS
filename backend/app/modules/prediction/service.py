@@ -54,7 +54,15 @@ def _load_preprocessor(dataset: str, task: str, model: str):
     if root != d and root not in d.parents: raise ValueError('Artifact path is outside configured root')
     p = d / 'preprocessor.joblib'
     if not p.exists(): raise FileNotFoundError('Saved preprocessing artifact not found')
-    return joblib.load(p)
+    saved = joblib.load(p)
+    if isinstance(saved, dict):
+        # Dataset pipelines save fitted state, reconstructed by their own loader.
+        import importlib
+        from ml.training.datasets import resolve_dataset
+        spec = resolve_dataset(dataset)
+        module = importlib.import_module(spec.preprocessor_module)
+        return getattr(module, spec.preprocessor_class).load(p)
+    return saved
 
 def _normalize_feature_key(name: str) -> str:
     return ''.join(ch if ch.isalnum() else '_' for ch in name.strip().lower()).strip('_')

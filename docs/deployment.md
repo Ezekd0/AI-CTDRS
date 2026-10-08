@@ -39,6 +39,31 @@ Serve the generated `dist/` directory from a static web server and set `VITE_API
 
 ## ML artifacts
 
+The repository includes a server-only NSL-KDD / binary / Random Forest bundle at
+`ml/artifacts/nsl_kdd/binary/random_forest/`. The existing Dockerfile copies it
+into the API image; no download or training occurs during startup. Other model
+selectors still require their own trained bundles.
+
+Inference requires `metadata.json`, `model.joblib`, `feature_names.json`,
+`label_encoder.joblib`, and `preprocessor.joblib`. `metrics.json` supports the
+model registry; `lime_background.npy` supports local LIME explanations;
+`shap_global.json` supports global SHAP. `label_mapping.json`,
+`preprocessing_report.json`, and `provenance.json` record labels and provenance.
+Keep the bundle together. These files contain no application credentials and
+can be included in the backend deployment, but must never be served as static
+frontend assets. Only deserialize trusted artifacts. Runtime NumPy, pandas,
+and scikit-learn versions are pinned to the training environment.
+
+To reproduce using the existing pipeline (full official train/test splits):
+
+```bash
+python -m ml.training.train --dataset nsl-kdd --task binary --model random_forest --preprocess-if-missing
+python scripts/verify_production_artifacts.py --root ml/artifacts
+```
+
+Raw and processed datasets remain ignored. NSL-KDD is a historical benchmark;
+its held-out metrics describe that dataset, not modern live traffic coverage.
+
 Training is performed by the CLI in `ml.training.train`. Artifacts are server-side only and must not be exposed as static files. Random Forest and XGBoost bundles include their saved preprocessing artifact, model, label encoder, metadata, metrics, global SHAP output, and a deterministic LIME background sample.
 
 ## Database migrations

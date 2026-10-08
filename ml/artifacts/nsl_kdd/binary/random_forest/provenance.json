@@ -1,0 +1,14 @@
+{
+  "source": "https://github.com/Jehuty4949/NSL_KDD",
+  "training_command": "python -m ml.training.train --dataset nsl-kdd --task binary --model random_forest --preprocess-if-missing",
+  "raw_files": {
+    "KDDTest+.txt": {
+      "sha256": "fa46b0935342616aa83b7c2578db355b6a7aaabbc492248172c7a1e8b7ab8f84",
+      "rows": 22544
+    },
+    "KDDTrain+.txt": {
+      "sha256": "1b86d2f957b33082081bba410fe129b475efebcc13c9014c3f447c8271aadf95",
+      "rows": 125973
+    }
+  }
+}

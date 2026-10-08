@@ -33,3 +33,18 @@ export function logout() {
   localStorage.removeItem("access_token");
   window.dispatchEvent(new Event("auth:logout"));
 }
+
+export function predictionErrorMessage(error) {
+  if (error.response) {
+    const { status, data } = error.response;
+    const detail = typeof data?.detail === "string" ? data.detail : "Detection request failed";
+    return `HTTP ${status}: ${detail}`;
+  }
+  if (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT") {
+    return "Detection request timed out. Check the backend before retrying; it may still be processing.";
+  }
+  if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
+    return "No readable response from the detection API. Check backend connectivity and CORS; the browser may have blocked an HTTP error response.";
+  }
+  return error.message || "Prediction failed.";
+}
