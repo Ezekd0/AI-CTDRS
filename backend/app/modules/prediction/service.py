@@ -3,7 +3,6 @@ import json, uuid, math
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-import joblib
 import numpy as np
 import pandas as pd
 from sqlalchemy import select
@@ -11,7 +10,12 @@ from app.db.models import Dataset, Model, Detection, Explanation, Alert
 from app.db.session import get_engine
 from sqlalchemy.orm import Session
 from app.core.config import get_settings
-from ml.training.artifacts import load_bundle
+from app.modules.prediction.runtime import cached_bundle, cached_preprocessor
+from time import monotonic
+import logging
+
+logger = logging.getLogger(__name__)
+EXPLANATION_BUDGET_SECONDS = 20.0
 
 SUPPORTED = {'cicids2017', 'cicids2018', 'nsl-kdd'}
 MODELS = {'random_forest', 'xgboost'}
@@ -49,20 +53,8 @@ def _safe_component(value: str) -> str:
     return value
 
 def _load_preprocessor(dataset: str, task: str, model: str):
-    s = get_settings(); d = s.resolved_artifacts_root / _safe_component(_artifact_slug(dataset)) / _safe_component(task) / _safe_component(model)
-    d = d.resolve(); root = s.resolved_artifacts_root
-    if root != d and root not in d.parents: raise ValueError('Artifact path is outside configured root')
-    p = d / 'preprocessor.joblib'
-    if not p.exists(): raise FileNotFoundError('Saved preprocessing artifact not found')
-    saved = joblib.load(p)
-    if isinstance(saved, dict):
-        # Dataset pipelines save fitted state, reconstructed by their own loader.
-        import importlib
-        from ml.training.datasets import resolve_dataset
-        spec = resolve_dataset(dataset)
-        module = importlib.import_module(spec.preprocessor_module)
-        return getattr(module, spec.preprocessor_class).load(p)
-    return saved
+    return cached_preprocessor(get_settings().resolved_artifacts_root, _safe_component(dataset),
+                               _safe_component(task), _safe_component(model))
 
 def _normalize_feature_key(name: str) -> str:
     return ''.join(ch if ch.isalnum() else '_' for ch in name.strip().lower()).strip('_')
@@ -97,7 +89,7 @@ def predict(request, user=None) -> dict[str, Any]:
     if request.dataset not in SUPPORTED or request.model not in MODELS: raise ValueError('Unsupported dataset or model')
     if len(request.features) > s.max_prediction_features: raise ValueError(f'Too many input features; maximum is {s.max_prediction_features}')
     _validate_features(request.features)
-    bundle = load_bundle(s.resolved_artifacts_root, request.dataset, request.task, request.model)
+    bundle = cached_bundle(s.resolved_artifacts_root, request.dataset, request.task, request.model)
     X, originals = _transform(_load_preprocessor(request.dataset, request.task, request.model), request.features, bundle.feature_names)
     probabilities = np.asarray(bundle.predict_proba(X))[0]
     idx = int(np.argmax(probabilities))
@@ -139,22 +131,36 @@ def predict(request, user=None) -> dict[str, Any]:
     root = s.resolved_reports_root / 'detections'; root.mkdir(parents=True, exist_ok=True)
     (root / f'{detection_id}.json').write_text(json.dumps(payload, indent=2))
 
-    if s.enable_explanations and (request.generate_shap or request.generate_lime):
-        with Session(get_engine()) as db:
-            persisted = db.get(Detection, detection_id)
-            if request.generate_shap:
+    if request.generate_shap or request.generate_lime:
+        from app.modules.explainability.service import generate_shap_for_detection, generate_lime_for_detection
+        deadline = monotonic() + EXPLANATION_BUDGET_SECONDS
+        for method, requested, generate in (
+            ('shap', request.generate_shap, generate_shap_for_detection),
+            ('lime', request.generate_lime, generate_lime_for_detection),
+        ):
+            if not requested:
+                continue
+            status = 'unavailable: explanations are disabled on this server'
+            if s.enable_explanations:
                 try:
-                    from app.modules.explainability.service import generate_shap_for_detection
-                    generate_shap_for_detection(db, persisted)
-                    explanation['shap'] = 'generated'
+                    # Independent transactions: failed explanation persistence cannot
+                    # roll back the already committed prediction or another explanation.
+                    with Session(get_engine()) as db:
+                        persisted = db.get(Detection, detection_id)
+                        generate(db, persisted, timeout=deadline - monotonic())
+                        db.commit()
+                    status = 'generated'
+                except TimeoutError as exc:
+                    status = f'timed_out: {exc}'
                 except Exception as exc:
-                    explanation['shap'] = f'failed: {exc}'
-            if request.generate_lime:
-                try:
-                    from app.modules.explainability.service import generate_lime_for_detection
-                    generate_lime_for_detection(db, persisted)
-                    explanation['lime'] = 'generated'
-                except Exception as exc:
-                    explanation['lime'] = f'failed: {exc}'
-            db.commit()
+                    logger.warning('%s explanation unavailable for %s: %s', method, detection_id, exc)
+                    status = f'unavailable: {exc}'
+            explanation[method] = status
+        try:
+            with Session(get_engine()) as db:
+                persisted = db.get(Detection, detection_id)
+                persisted.explanation_status = explanation
+                db.commit()
+        except Exception:
+            logger.exception('Could not persist explanation status for %s', detection_id)
     return {**payload, 'explanation': explanation}

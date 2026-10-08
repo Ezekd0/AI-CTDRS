@@ -21,6 +21,13 @@ def test_shap_local_is_real_and_structured():
     assert len(result["features"]) == 2
     assert all("shap_contribution" in row for row in result["features"])
     assert any(abs(row["shap_contribution"]) > 0 for row in result["features"])
+    assert np.isclose(result['base_value'] + sum(r['shap_contribution'] for r in result['features']), result['probability'])
+
+
+def test_tree_explainer_is_reused():
+    from ml.explainability.shap_explainer import _cached_tree_explainer
+    estimator = RandomForestClassifier(n_estimators=5, random_state=42).fit([[0, 0], [1, 1]], [0, 1])
+    assert _cached_tree_explainer(estimator) is _cached_tree_explainer(estimator)
 
 
 def test_shap_global_contains_measured_importance():

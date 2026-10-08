@@ -19,6 +19,9 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     settings.resolved_reports_root.mkdir(parents=True, exist_ok=True)
     logger.info("Starting %s %s (%s)", settings.app_name, settings.app_version, settings.environment)
+    if settings.enable_explanations and settings.environment.lower() in {'production', 'prod'}:
+        from app.modules.explainability.worker import worker
+        worker.start_warmup(settings.resolved_artifacts_root)
     yield
     logger.info("Stopping %s", settings.app_name)
 

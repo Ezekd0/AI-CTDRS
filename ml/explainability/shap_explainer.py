@@ -6,6 +6,7 @@ SHAP TreeExplainer against the loaded Random Forest or XGBoost model.
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,13 @@ import numpy as np
 
 
 SUPPORTED_TREE_MODELS = {"random_forest", "xgboost"}
+
+
+@lru_cache(maxsize=1)
+def _cached_tree_explainer(estimator: Any):
+    import shap
+    # Use training path counts already saved in the trees; no background sweep.
+    return shap.TreeExplainer(estimator, feature_perturbation="tree_path_dependent")
 
 
 def _json_default(value: Any):
@@ -74,8 +82,6 @@ def _base_for_class(base_values: Any, class_index: int) -> float | None:
 
 def explain_local(model: Any, model_name: str, X: np.ndarray, feature_names: list[str], class_names: list[str], original_values: list[Any] | None = None) -> dict[str, Any]:
     """Explain one transformed row and return a browser-safe structured result."""
-    import shap
-
     X = np.asarray(X, dtype=np.float32)
     if X.ndim != 2 or X.shape[0] != 1:
         raise ValueError("Local SHAP explanation requires exactly one feature row")
@@ -83,7 +89,7 @@ def explain_local(model: Any, model_name: str, X: np.ndarray, feature_names: lis
         raise ValueError("Feature count does not match feature_names")
 
     estimator = _tree_estimator(model, model_name)
-    explainer = shap.TreeExplainer(estimator)
+    explainer = _cached_tree_explainer(estimator)
     explanation = explainer(X)
     probabilities = model.predict_proba(X)[0]
     prediction_index = int(np.argmax(probabilities))

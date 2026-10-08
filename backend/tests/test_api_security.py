@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
@@ -48,13 +49,14 @@ def test_invalid_jwt_is_rejected():
         db.close()
 
 
-def test_viewer_cannot_predict_or_escalate_privileges():
+@pytest.mark.parametrize('shap,lime', [(False, False), (True, False), (False, True), (True, True)])
+def test_viewer_cannot_predict_or_escalate_privileges(shap, lime):
     client, db = _client_and_db()
     try:
         viewer = db.get(User, 'viewer')
         token, _, _ = create_access_token(viewer)
         headers = {'Authorization': f'Bearer {token}'}
-        response = client.post('/api/predict', json={'dataset': 'nsl-kdd', 'task': 'binary', 'model': 'random_forest', 'features': {'x': 1}}, headers=headers)
+        response = client.post('/api/predict', json={'dataset': 'nsl-kdd', 'task': 'binary', 'model': 'random_forest', 'features': {'x': 1}, 'generate_shap': shap, 'generate_lime': lime}, headers=headers)
         assert response.status_code == 403
         response = client.patch('/api/auth/users/analyst/role', json={'role': 'administrator'}, headers=headers)
         assert response.status_code == 403

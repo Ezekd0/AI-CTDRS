@@ -162,7 +162,7 @@ def load_bundle(artifacts_root: Path, dataset_slug: str, task: str, model_name: 
     class_names = meta["class_names"]
     model = load_model(meta["model"], directory / meta["artifact_files"]["model"], len(class_names), meta["n_features"])
     background_path = directory / 'lime_background.npy'
-    background = np.load(background_path, allow_pickle=False) if background_path.exists() else None
+    background = np.load(background_path, allow_pickle=False, mmap_mode="r") if background_path.exists() else None
     return LoadedBundle(
         model=model,
         feature_names=json.loads((directory / "feature_names.json").read_text()),

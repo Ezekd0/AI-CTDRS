@@ -5,14 +5,12 @@ import json
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.db.models.models import Detection, Explanation
-from ml.explainability.shap_explainer import explain_local as explain_shap_local
-from ml.training.artifacts import load_bundle
+from app.modules.explainability.worker import worker
 
 
 def _safe_detection_id(detection_id: str) -> str:
@@ -39,11 +37,6 @@ def save_detection(detection_id: str, payload: dict[str, Any]) -> Path:
     return path
 
 
-def _bundle(detection: Detection):
-    settings = get_settings()
-    return load_bundle(settings.resolved_artifacts_root, detection.dataset_id, detection.model.task, detection.model.name)
-
-
 def _persist(db: Session, detection: Detection, method: str, payload: dict[str, Any]) -> dict[str, Any]:
     row = db.execute(select(Explanation).where(Explanation.detection_id == detection.id, Explanation.method == method)).scalar_one_or_none()
     if row is None:
@@ -56,38 +49,27 @@ def _persist(db: Session, detection: Detection, method: str, payload: dict[str, 
     return payload
 
 
-def generate_shap_for_detection(db: Session, detection: Detection) -> dict[str, Any]:
+def _generate(db: Session, detection: Detection, method: str, timeout: float) -> dict[str, Any]:
     if detection.model.name not in {'random_forest', 'xgboost'}:
-        raise ValueError('SHAP supports Random Forest and XGBoost only')
-    bundle = _bundle(detection)
-    X = np.asarray(detection.transformed_features, dtype=np.float32).reshape(1, -1)
-    result = explain_shap_local(
-        bundle.model, detection.model.name, X, detection.feature_names or bundle.feature_names,
-        bundle.class_names, detection.original_feature_values,
-    )
-    result.update({'detection_id': detection.id, 'dataset': detection.dataset_id, 'task': detection.model.task, 'model': detection.model.name})
-    _persist(db, detection, 'shap', result)
-    return result
+        raise ValueError(f'{method.upper()} supports Random Forest and XGBoost only')
+    settings = get_settings()
+    result = worker.run(method, {
+        'root': str(settings.resolved_artifacts_root),
+        'dataset': detection.dataset_id, 'task': detection.model.task,
+        'model': detection.model.name, 'features': detection.transformed_features,
+        'names': detection.feature_names, 'originals': detection.original_feature_values,
+    }, timeout=timeout)
+    result.update({'detection_id': detection.id, 'dataset': detection.dataset_id,
+                   'task': detection.model.task, 'model': detection.model.name})
+    return _persist(db, detection, method, result)
 
 
-def generate_lime_for_detection(db: Session, detection: Detection) -> dict[str, Any]:
-    if detection.model.name not in {'random_forest', 'xgboost'}:
-        raise ValueError('LIME supports Random Forest and XGBoost only')
-    try:
-        from ml.explainability.lime_explainer import explain_local as explain_lime_local
-    except ImportError as exc:
-        raise RuntimeError("LIME dependency is not installed; install backend/requirements.txt") from exc
-    bundle = _bundle(detection)
-    X = np.asarray(detection.transformed_features, dtype=np.float32).reshape(1, -1)
-    if bundle.lime_background is None:
-        raise RuntimeError('LIME background artifact is missing for this model run; retrain the model bundle.')
-    result = explain_lime_local(
-        bundle.model, X, detection.feature_names or bundle.feature_names, bundle.class_names,
-        training_data=bundle.lime_background, original_values=detection.original_feature_values,
-    )
-    result.update({'detection_id': detection.id, 'dataset': detection.dataset_id, 'task': detection.model.task, 'model': detection.model.name})
-    _persist(db, detection, 'lime', result)
-    return result
+def generate_shap_for_detection(db: Session, detection: Detection, timeout: float = 20.0) -> dict[str, Any]:
+    return _generate(db, detection, 'shap', timeout)
+
+
+def generate_lime_for_detection(db: Session, detection: Detection, timeout: float = 20.0) -> dict[str, Any]:
+    return _generate(db, detection, 'lime', timeout)
 
 
 def explain_detection(detection_id: str) -> dict[str, Any]:

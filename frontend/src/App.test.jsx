@@ -27,6 +27,37 @@ describe('authentication and dashboard integration', () => {
     window.dispatchEvent(new Event('auth:logout'));
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Sign in' })).toBeInTheDocument());
   });
+
+  it.each([[false, false], [true, false], [false, true], [true, true]])('submits SHAP=%s and LIME=%s with a bounded prediction timeout', async (shap, lime) => {
+    localStorage.setItem('access_token', 'analyst-token');
+    window.history.replaceState({}, '', '/dashboard');
+    api.post.mockImplementation(() => new Promise(() => {}));
+    render(<App />);
+    const shapBox = await screen.findByLabelText('Generate SHAP');
+    const limeBox = screen.getByLabelText('Generate LIME');
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: JSON.stringify({ duration: 0, protocol_type: 'tcp' }) } });
+    if (shapBox.checked !== shap) fireEvent.click(shapBox);
+    if (limeBox.checked !== lime) fireEvent.click(limeBox);
+    fireEvent.click(screen.getByRole('button', { name: 'Run detection' }));
+    await waitFor(() => expect(api.post).toHaveBeenCalledWith('/predict', expect.objectContaining({ generate_shap: shap, generate_lime: lime }), { timeout: 30000 }));
+    expect(screen.getByRole('button', { name: 'Running pipeline…' })).toBeDisabled();
+  });
+
+  it('shows explanation timeout and unavailability on the successful detection details', async () => {
+    localStorage.setItem('access_token', 'analyst-token');
+    window.history.replaceState({}, '', '/dashboard');
+    const detection = { id: 'd1', confidence: 0.95, predicted_attack: 'normal', severity: 'low', explanation_status: { shap: 'timed_out: server-side limit', lime: 'unavailable: warming up' } };
+    api.get.mockImplementation(path => Promise.resolve({ data: path === '/auth/me' ? { id: 'u1', role: 'analyst' } : path === '/detections/d1' ? detection : { statistics: {}, recent_incidents: [] } }));
+    api.post.mockResolvedValue({ data: { detection_id: 'd1', prediction: 'normal', probability: 0.95, explanation: detection.explanation_status } });
+    render(<App />);
+    await screen.findByLabelText('Generate SHAP');
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '{"duration": 0}' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Run detection' }));
+    expect(await screen.findByText('timed_out: server-side limit')).toBeInTheDocument();
+    expect(screen.getByText('unavailable: warming up')).toBeInTheDocument();
+    expect(screen.getByText('SHAP status')).toBeInTheDocument();
+    expect(screen.getByText('LIME status')).toBeInTheDocument();
+  });
 });
 
 function fillSignup(confirm = 'RegistrationPassword123!') {
